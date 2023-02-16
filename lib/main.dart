@@ -1,4 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:localdb/src/ui/app.dart';
+
+import 'loginResponse.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,16 +57,33 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  final dio = Dio();
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  void login() async {
+    try {
+      dio.options.baseUrl = 'https://api.recut.fun/api';
+
+      final res = await dio.post(
+        '/user/login',
+        data: {
+          'userId': 'string',
+          'userPassword': 'string',
+        },
+        options: Options(
+          responseType: ResponseType.json,
+          contentType: Headers.jsonContentType,
+        ),
+      );
+      LoginResponse a = LoginResponse.fromJson(res.data);
+      print(a.token);
+    } on DioError catch (e) {
+      print(e.response);
+    }
   }
 
   @override
@@ -106,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: login,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
