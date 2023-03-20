@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:localdb/src/routerPage.dart';
+import 'package:localdb/src/timerBloc/timerPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'loginResponse.dart';
 
@@ -19,7 +21,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: const MyHomePage(title: 'The 縮'),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const RouterPage(),
+        '/reCut': (context) => const MyHomePage(
+              title: 'The縮',
+            ),
+        '/timer': (context) => const TimerPage(),
+      },
     );
   }
 }
